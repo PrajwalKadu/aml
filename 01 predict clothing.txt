@@ -1,0 +1,26 @@
+data = {}
+
+def TrainData(temp , wear):
+    temp = int(input("Enter the temperature: "))
+    sweater = input("Did you wear a sweater (yes/no)? ")
+    data[temp] = sweater
+    return data[temp]
+    
+def TestData(temp):
+    if temp in data:
+        return data[temp]
+    else:
+        closest_temp = min(data.keys(), key=lambda x: abs(x - temp))
+        return data[closest_temp]
+
+if __name__=="__main__":
+    n = int(input("Enter the number of data points: "))
+    for i in range(n):
+        TrainData()
+    
+    temp = int(input("\nEnter the temperature for prediction: "))
+    value = TestData(temp)
+    if value == 1:
+        print("Wear a Sweater")
+    else:
+        print("No need to Wear a Sweater")

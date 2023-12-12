@@ -1,0 +1,63 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+
+class DivisiveHierarchicalClustering:
+    def __init__(self, data):
+        self.data = data
+        self.num_samples, self.num_features = data.shape
+        self.clusters = [[i] for i in range(self.num_samples)]
+
+    def euclidean_distance(self, a, b):
+        return np.linalg.norm(a - b)
+
+    def find_closest_clusters(self):
+        min_distance = float('inf')
+        closest_clusters = None
+
+        for i in range(len(self.clusters)):
+            for j in range(i + 1, len(self.clusters)):
+                distance = self.compute_cluster_distance(self.clusters[i], self.clusters[j])
+
+                if distance < min_distance:
+                    min_distance = distance
+                    closest_clusters = (i, j)
+        return closest_clusters
+
+    def compute_cluster_distance(self, cluster_a, cluster_b):
+        distance_sum = 0
+
+        for i in cluster_a:
+            for j in cluster_b:
+                distance_sum += self.euclidean_distance(self.data[i], self.data[j])
+        return distance_sum / (len(cluster_a) * len(cluster_b))
+
+    def divisive_clustering(self, k):
+        while len(self.clusters) < k:
+            i, j = self.find_closest_clusters()
+            self.merge_clusters(i, j)
+
+    def merge_clusters(self, i, j):
+        merged_cluster = self.clusters[i] + self.clusters[j]
+        del self.clusters[j]
+        self.clusters[i] = merged_cluster
+    def plot_clusters(self):
+        for i, cluster in enumerate(self.clusters):
+            points = self.data[cluster]
+            plt.scatter(points[:, 0], points[:, 1], label=f'Cluster {i + 1}')
+        plt.title('Divisive Hierarchical Clustering')
+        plt.xlabel('Feature 1')
+        plt.ylabel('Feature 2')
+        plt.show()
+
+# Load the Iris dataset
+iris = load_iris()
+data = iris.data[:, :2]  # Use only the first two features for simplicity
+
+# User input for the number of clusters
+num_clusters = int(input("Enter the number of clusters: "))
+
+# Perform divisive clustering
+divisive_clusterer = DivisiveHierarchicalClustering(data)
+divisive_clusterer.divisive_clustering(k=num_clusters)
+divisive_clusterer.plot_clusters()

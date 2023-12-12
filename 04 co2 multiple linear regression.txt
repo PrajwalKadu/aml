@@ -1,0 +1,22 @@
+import pandas
+from sklearn import linear_model
+
+df = pandas.read_csv("data.csv")
+X = df[['Weight', 'Volume']]
+y = df['CO2']
+regr = linear_model.LinearRegression()
+regr.fit(X, y)
+a = int(input("Enter Weight : "))
+b = int(input("Enter Volume : "))
+predictedCO2 = regr.predict([[a, b]])
+print("\nWeight = ",a, "Volume = ",b, "\nCO2 Emission = ",predictedCO2)
+
+Z = df[['Weight', 'Volume', 'Year']]
+y = df['CO2']
+regr = linear_model.LinearRegression()
+regr.fit(Z, y)
+a = int(input("Enter Weight : "))
+b = int(input("Enter Volume : "))
+c = int(input("Enter Mfg Year : "))
+predictedCO2 = regr.predict([[a, b, c]])
+print("\nWeight = ",a, "Volume = ",b, "Mfg Year = ",c, "\nCO2 Emission = ",predictedCO2)

@@ -1,0 +1,45 @@
+class SweaterPredictor:
+    def __init__(self):
+        self.data = {}
+
+    def train_data(self, temperature, prediction):
+        if temperature not in self.data:
+            self.data[temperature] = []
+        self.data[temperature].append(prediction)
+
+    def predict(self, temperature):
+        if temperature in self.data:
+            predictions = self.data[temperature]
+            yes_count = predictions.count("Yes")
+            no_count = predictions.count("No")9
+            if yes_count > no_count:
+                return "Wear a sweater"
+            else:
+                return "No need for a sweater"
+        else:
+            closest_temp = min(self.data.keys(), key=lambda x: abs(x - temperature))
+            if closest_temp in self.data:
+                predictions = self.data[closest_temp]
+                yes_count = predictions.count("Yes")
+                no_count = predictions.count("No")
+                if yes_count > no_count:
+                    return "Wear a sweater"
+                else:
+                    return "No need for a sweater"
+
+predictor = SweaterPredictor()
+
+# Adding temperature data and predictions to the predictor
+predictor.train_data(12, "Yes")
+predictor.train_data(15, "No")
+predictor.train_data(18, "No")
+predictor.train_data(10, "Yes")
+predictor.train_data(18, "Yes")
+predictor.train_data(18, "No")
+predictor.train_data(15, "No")
+predictor.train_data(10, "Yes")
+
+# Get prediction based on the temperature
+temperature_to_predict = int(input("Enter the temperature for prediction: "))
+prediction = predictor.predict(temperature_to_predict)
+print(f"For a temperature of {temperature_to_predict}°C, {prediction}")
